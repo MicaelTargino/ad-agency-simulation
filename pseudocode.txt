@@ -1,0 +1,22 @@
+1. Define Classes:
+   - Brand: Represents a brand with daily and monthly budgets, current spends, and campaigns.
+   - Campaign: Represents a campaign with a dayparting schedule and status (on/off).
+   - AdAgency: Manages all brands, handles budget checks, and updates campaign statuses.
+
+2. Initialize Data Structures:
+   - Brands: Dictionary or List of Brand objects.
+   - Campaigns: List of Campaign objects associated with each Brand.
+
+3. Key Steps:
+   - Daily Spend Update:
+     - For each brand, randomly increase the daily spend.
+     - Check if the daily or monthly budget is exceeded.
+     - Turn off campaigns if budgets are exceeded.
+   - Dayparting:
+     - Check the current time and turn campaigns on/off based on their schedule.
+   - Reset Budgets:
+     - At the start of a new day, reset daily spends and reactivate campaigns.
+     - At the start of a new month, reset monthly spends and reactivate campaigns.
+
+4. Simulation:
+   - Run a loop to simulate real-time spend updates and status changes.
