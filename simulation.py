@@ -89,7 +89,7 @@ def simulate_month(agency: AdAgency):
                         brand.update_spend(spend)
                         brand.check_budgets()
 
-                time.sleep(0.25)
+                time.sleep(0.5)
                 pbar.update(1)
 
             # Reset daily budget at the end of the day
