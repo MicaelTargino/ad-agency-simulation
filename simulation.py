@@ -83,7 +83,7 @@ def simulate_month(agency: AdAgency):
                     else:
                         print("  🔄 No dayparting status changes")
                     
-                    # Original spend/budget logic remains unchanged below
+                    # If there's at least one campaign active, simulate random spend
                     if any(campaign.status for campaign in brand.campaigns):
                         spend = random.uniform(0, brand.daily_budget / 5)
                         brand.update_spend(spend)
