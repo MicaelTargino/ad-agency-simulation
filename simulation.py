@@ -4,7 +4,7 @@ import random
 import logging
 import calendar 
 from tqdm import tqdm  # For progress bar
-from typing import List
+from typing import List, Dict
 from datetime import datetime
 
 # Custom-code imports 
@@ -20,46 +20,77 @@ logging.basicConfig(
 )
 def setup_campaigns() -> List[Campaign]:
     """Create and return a list of Campaign objects."""
-    return [
-        Campaign(name="Campaign1", dayparting_schedule=[(9, 17)]),
-        Campaign(name="Campaign2", dayparting_schedule=[(12, 20)]),
+    brand1_campaigns = [
+        Campaign(name="Campaign1", dayparting_schedule=[(8, 19)]),
+        Campaign(name="Campaign2", dayparting_schedule=[(12, 22)])
     ]
+    brand2_campaigns = [
+        Campaign(name="Campaign3", dayparting_schedule=[(13, 21)]),
+        Campaign(name="Campaign4", dayparting_schedule=[(5, 12)])
+    ]
+    return {
+        "brand1_campaigns": brand1_campaigns,
+        "brand2_campaigns": brand2_campaigns
+    }
 
-def setup_brands(campaigns: List[Campaign]) -> List[Brand]:
+
+def setup_brands(campaigns: Dict[str, List[Campaign]]) -> List[Brand]:
     """Create and return a list of Brand objects."""
     return [
-        Brand(name="Brand1", daily_budget=1000, monthly_budget=30000, campaigns=campaigns),
-        Brand(name="Brand2", daily_budget=1500, monthly_budget=45000, campaigns=[campaigns[0]]),
+        Brand(name="Brand1", daily_budget=1000, monthly_budget=30000, campaigns=campaigns.get("brand1_campaigns")),
+        Brand(name="Brand2", daily_budget=1500, monthly_budget=45000, campaigns=campaigns.get("brand2_campaigns"))
     ]
 
 def simulate_month(agency: AdAgency):
     """Simulate an entire month of ad spending and campaign management."""
     now = datetime.now()
     month_name = now.strftime("%B")
-    days_in_month = calendar.monthrange(now.year, now.month)[1]  # Get number of days in the month
-    total_hours = days_in_month * 24  # Total hours in the month
+    days_in_month = calendar.monthrange(now.year, now.month)[1]
+    total_hours = days_in_month * 24
 
     logging.info(f"Simulating {month_name} ({days_in_month} days)...")
 
-    # Initialize progress bar
     with tqdm(total=total_hours, desc="Simulating hours", unit="hour") as pbar:
         for day in range(1, days_in_month + 1):
-            pbar.set_description(f"Day {day}/{days_in_month}")  # Update progress bar description
+            pbar.set_description(f"Day {day}/{days_in_month}")
             for hour in range(24):
-                current_hour = hour  # Simulate each hour
+                current_hour = hour
+                formatted_hour = f"{current_hour:02d}:00"
+                
                 for brand in agency.brands:
-                    # Simulate random spend
-                    spend = random.uniform(0, brand.daily_budget / 10)
-                    brand.update_spend(spend)
-                    brand.check_budgets()
-
-                    # Handle dayparting
+                    print(f"\n📅 Day {day} {formatted_hour} | Brand: {brand.name}")
+                    status_updates = []
+                    
+                    # Handle dayparting first
                     for campaign in brand.campaigns:
-                        if not campaign.is_active(current_hour):
-                            campaign.status = False
+                        prev_status = campaign.status
+                        new_status = campaign.is_active(current_hour)
+                        campaign.status = new_status
+                        
+                        # Only show changes in status
+                        if prev_status != new_status:
+                            status_emoji = "🟢" if new_status else "🔴"
+                            schedule = ", ".join([f"{s}-{e}" for (s,e) in campaign.dayparting_schedule])
+                            status_updates.append(
+                                f"  {status_emoji} Campaign: {campaign.name} "
+                                f"| Status: {'ACTIVE' if new_status else 'INACTIVE'} "
+                                f"| Schedule: {schedule}"
+                            )
+                    
+                    # Print dayparting status changes
+                    if status_updates:
+                        print("\n".join(status_updates))
+                    else:
+                        print("  🔄 No dayparting status changes")
+                    
+                    # Original spend/budget logic remains unchanged below
+                    if any(campaign.status for campaign in brand.campaigns):
+                        spend = random.uniform(0, brand.daily_budget / 5)
+                        brand.update_spend(spend)
+                        brand.check_budgets()
 
-                time.sleep(0.1)  # Simulate 1 hour in real time
-                pbar.update(1)  # Update progress bar
+                time.sleep(0.25)
+                pbar.update(1)
 
             # Reset daily budget at the end of the day
             logging.info(f"Resetting daily budgets for Day {day}...")
@@ -68,6 +99,7 @@ def simulate_month(agency: AdAgency):
     # Reset monthly budget at the end of the month
     logging.info(f"Resetting monthly budgets for {month_name}...")
     agency.reset_monthly()
+
 
 def main():
     """Main function to run the ad agency simulation."""
