@@ -1,0 +1,6 @@
+services:
+  simulation:
+    build: .
+    volumes:
+      - .:/app
+    command: python simulation.py
