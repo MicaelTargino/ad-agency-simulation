@@ -1,22 +1,66 @@
-1. Define Classes:
-   - Brand: Represents a brand with daily and monthly budgets, current spends, and campaigns.
-   - Campaign: Represents a campaign with a dayparting schedule and status (on/off).
-   - AdAgency: Manages all brands, handles budget checks, and updates campaign statuses.
+1. Class Definitions
+- Campaign:
+  • Attributes: 
+      - name (str), 
+      - dayparting_schedule (list of hourly windows), 
+      - status (active/inactive)
+  • Methods: 
+      - Check if active based on current hour
 
-2. Initialize Data Structures:
-   - Brands: Dictionary or List of Brand objects.
-   - Campaigns: List of Campaign objects associated with each Brand.
+- Brand:
+  • Attributes: 
+      - name, 
+      - daily/monthly budgets, 
+      - daily/monthly spends, 
+      - campaigns (list)
+  • Methods: 
+      - Update spends based on active campaigns
+      - Check budget thresholds and deactivate campaigns
+      - Reset daily/monthly budgets and reactivate campaigns
 
-3. Key Steps:
-   - Daily Spend Update:
-     - For each brand, randomly increase the daily spend.
-     - Check if the daily or monthly budget is exceeded.
-     - Turn off campaigns if budgets are exceeded.
-   - Dayparting:
-     - Check the current time and turn campaigns on/off based on their schedule.
-   - Reset Budgets:
-     - At the start of a new day, reset daily spends and reactivate campaigns.
-     - At the start of a new month, reset monthly spends and reactivate campaigns.
+- AdAgency:
+  • Attributes: 
+      - List of Brand objects
+  • Methods:
+      - Simulate time progression (hours/days/months)
+      - Coordinate budget checks and dayparting enforcement
+      - Handle budget resets at temporal boundaries
 
-4. Simulation:
-   - Run a loop to simulate real-time spend updates and status changes.
+2. Data Structure Initialization
+- Campaigns: Organized hierarchically under Brands
+  • Each Brand contains its own list of Campaign objects
+
+- Brands: List of Brand objects managed by AdAgency
+  • Each maintains independent budget tracking
+  • Campaign statuses are scoped to their parent Brand
+
+3. Core Simulation Flow 
+For each simulated month:
+    For each day in month:
+        Reset daily budgets for all brands
+        For each hour in day:
+            1. Dayparting Enforcement:
+               - For each Brand's Campaigns:
+                 • Compare current hour to schedule
+                 • Update status (active/inactive)
+                 • Log status changes with rich visual feedback
+            
+            2. Spend Calculation:
+               - For Brands with active campaigns:
+                 • Generate random spend amount
+                 • Update daily/monthly spend totals
+                 • Perform budget threshold check
+            
+            3. Budget Enforcement:
+               - If any budget exceeded:
+                 • Deactivate all campaigns for Brand
+                 • Prevent further spending
+            
+            4. Real-time Simulation:
+               - Progress visualization with formatted hour/day counters
+               - Throttled execution (1 simulated hour = 0.5 real seconds)
+
+    End of month:
+        Reset monthly budgets for all brands
+        Reactivate all campaigns
+
