@@ -1,7 +1,19 @@
-# Ad Budget Simulation System
+# 📊 Advertising Budget Simulation System | Python + Pydantic + Docker
 
-## Overview
-A simulation system for managing advertising campaigns with daily/monthly budgets and dayparting schedules. Built with Python 3.9, Pydantic for validation, and Docker for containerization.
+A digital advertising agency simulation for modeling campaign budgets, dayparting schedules, and real-time spend tracking. Built with:
+
+- **Core Features**:  
+  ▶️ Daily/monthly budget enforcement  
+  🕒 Dayparting-aware campaign activation  
+  🔄 Real-time simulation (1 simulated hour = 0.5s)  
+  ✅ Pydantic data validation  
+  🐳 Docker containerization  
+
+- **Use Case**:  
+  Simulate ad spend scenarios for agencies/brands to optimize budget allocation and campaign scheduling.
+
+- **Tech Stack**:  
+  `Python` | `Pydantic` | `Docker` | `TQDM`
 
 ## How to Run
 
