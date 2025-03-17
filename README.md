@@ -102,14 +102,15 @@ python simulation.py
 ## Monitoring 
 
 ### Real-Time Indicators
-    - 📊 Progress bar showing completed hours/total monthly hours 
-    - 📅 Day counter (e.g. "Day 5/31") in progress bar 
-    - 🎨 Color-coded statuses:
-    ```plaintext 
+
+   - 📊 Progress bar showing completed hours/total monthly hours 
+   - 📅 Day counter (e.g. "Day 5/31") in progress bar 
+   - 🎨 Color-coded statuses:
+   ```plaintext 
     🟢 Active campaign
     🔴 Inactive campaign
     🔄 No status change
-    ```
+  ```
 
 ### Budget Tracking
 - **Hourly Updates**  
